@@ -331,6 +331,10 @@ class _Client(_NetworkNode):
         self._message_stream = self._get_message_stream()
         self._is_connected = True
         return self
+    
+    def join_multicast(self, multicastip=None, localip=None):
+        self._socket.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_IF, socket.inet_aton(localip))
+        self._socket.setsockopt(socket.SOL_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(multicastip) +    socket.inet_aton(localip))
 
 
 class UDPClient(_Client, _UDPNode):

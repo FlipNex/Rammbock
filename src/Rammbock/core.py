@@ -248,6 +248,25 @@ class RammbockCore(object):
         """
         self._start_client(UDPClient, ip, port, name, timeout, protocol, family)
 
+    def start_multicast_udp_client(self, multicastip=None, ip=None, port=None, name=None, timeout=None, protocol=None):
+        """Starts a new Multicast UDP client.
+        Client can be optionally given `ip` and `port` to bind to, as well as
+        `name`, default `timeout` and a `protocol`. You should use `Connect`
+        keyword to connect client to a host.
+
+        Client should be given a Multicast Group Address 'multicastip'
+
+        Examples:
+        | Start Multicast UDP client | 239.0.56.125 |
+        | Start Multicast UDP client | 239.0.56.125 | name=Client1 | protocol=GTPV2 |
+        | Start Multicast UDP client | 239.0.56.125 | 10.10.10.2 | 53 | name=Server1 | protocol=GTPV2 |
+        | Start Multicast UDP client | timeout=5 |
+        """
+
+        self._start_client(UDPClient, ip, port, name, timeout, protocol)
+        client, name = self._clients.get_with_name(name)
+        client.join_multicast(multicastip, ip)
+
     def start_tcp_client(self, ip=None, port=None, name=None, timeout=None, protocol=None, family='ipv4'):
         """Starts a new TCP client.
 
